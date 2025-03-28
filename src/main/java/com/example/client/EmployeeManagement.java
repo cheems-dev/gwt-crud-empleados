@@ -1,5 +1,7 @@
 package com.example.client;
 
+import java.util.List;
+
 import com.example.shared.Empleado;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -7,9 +9,16 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.*;
-
-import java.util.List;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 public class EmployeeManagement implements EntryPoint {
   private final EmployeeServiceAsync employeeService = GWT.create(EmployeeService.class);
@@ -20,45 +29,30 @@ public class EmployeeManagement implements EntryPoint {
   private TextBox emailTextBox = new TextBox();
   private TextBox telefonoTextBox = new TextBox();
   private TextBox salarioTextBox = new TextBox();
-  private Button addButton = new Button("Agregar");
-  private Button updateButton = new Button("Actualizar");
-  private Button cancelButton = new Button("Cancelar");
+  private Button addButton = new Button("AGREGAR");
+  private Button updateButton = new Button("ACTUALIZAR");
+  private Button cancelButton = new Button("CANCELAR");
+  private Button showFormButton = new Button("ADD");
   private Label notificationLabel = new Label();
+
+  // Modal dialog
+  private DialogBox dialogBox = new DialogBox();
+  private VerticalPanel dialogContents = new VerticalPanel();
+  private Label dialogTitle = new Label();
+  private FlowPanel formPanel = new FlowPanel();
 
   private Empleado currentEmployee = null;
 
   @Override
   public void onModuleLoad() {
-    // Create form panel
-    FlowPanel formPanel = new FlowPanel();
-    formPanel.addStyleName("employeeForm");
+    // Add button container
+    FlowPanel addButtonContainer = new FlowPanel();
+    addButtonContainer.addStyleName("addButtonContainer");
+    showFormButton.addStyleName("addButton");
+    addButtonContainer.add(showFormButton);
 
-    // Form fields
-    FlowPanel nombreField = createFormField("Nombre:", nombreTextBox);
-    FlowPanel apellidoField = createFormField("Apellido:", apellidoTextBox);
-    FlowPanel emailField = createFormField("Email:", emailTextBox);
-    FlowPanel telefonoField = createFormField("Teléfono:", telefonoTextBox);
-    FlowPanel salarioField = createFormField("Salario:", salarioTextBox);
-
-    // Button panel
-    HorizontalPanel buttonPanel = new HorizontalPanel();
-    buttonPanel.addStyleName("buttonPanel");
-    buttonPanel.add(addButton);
-    buttonPanel.add(updateButton);
-    buttonPanel.add(cancelButton);
-
-    // Initially hide update button
-    updateButton.setVisible(false);
-    cancelButton.setVisible(false);
-
-    // Add form elements to panel
-    formPanel.add(nombreField);
-    formPanel.add(apellidoField);
-    formPanel.add(emailField);
-    formPanel.add(telefonoField);
-    formPanel.add(salarioField);
-    formPanel.add(buttonPanel);
-    formPanel.add(notificationLabel);
+    // Setup dialog
+    setupDialog();
 
     // Setup table
     employeeTable.addStyleName("employeeTable");
@@ -71,8 +65,17 @@ public class EmployeeManagement implements EntryPoint {
     employeeTable.setText(0, 6, "Acciones");
 
     // Add widgets to the root panel
-    RootPanel.get("employeeFormContainer").add(formPanel);
+    RootPanel.get("addButtonContainer").add(addButtonContainer);
     RootPanel.get("employeeTableContainer").add(employeeTable);
+
+    // Show form button click handler
+    showFormButton.addClickHandler(new ClickHandler() {
+      @Override
+      public void onClick(ClickEvent event) {
+        dialogTitle.setText("Agregar Empleado");
+        showDialog(true);
+      }
+    });
 
     // Add button click handler
     addButton.addClickHandler(new ClickHandler() {
@@ -97,6 +100,7 @@ public class EmployeeManagement implements EntryPoint {
               showNotification("Empleado agregado exitosamente", true);
               clearForm();
               loadEmployees();
+              dialogBox.hide();
             }
           });
         }
@@ -131,6 +135,7 @@ public class EmployeeManagement implements EntryPoint {
               updateButton.setVisible(false);
               cancelButton.setVisible(false);
               currentEmployee = null;
+              dialogBox.hide();
             }
           });
         }
@@ -146,11 +151,100 @@ public class EmployeeManagement implements EntryPoint {
         updateButton.setVisible(false);
         cancelButton.setVisible(false);
         currentEmployee = null;
+        dialogBox.hide();
       }
     });
 
     // Load employees
     loadEmployees();
+  }
+
+  private void setupDialog() {
+    // Configure dialog box
+    dialogBox.setText("Empleado");
+    dialogBox.setAnimationEnabled(true);
+    dialogBox.setGlassEnabled(true);
+    dialogBox.setGlassStyleName("gwt-PopupPanelGlass");
+
+    // Dialog title
+    dialogTitle.addStyleName("dialogTitle");
+
+    // Botón de cierre
+    Button closeButton = new Button("×");
+    closeButton.addStyleName("dialogCloseButton");
+    closeButton.addClickHandler(new ClickHandler() {
+      @Override
+      public void onClick(ClickEvent event) {
+        clearForm();
+        addButton.setVisible(true);
+        updateButton.setVisible(false);
+        cancelButton.setVisible(false);
+        currentEmployee = null;
+        dialogBox.hide();
+      }
+    });
+
+    // Create form panel
+    formPanel.addStyleName("employeeForm");
+
+    // Form fields
+    FlowPanel nombreField = createFormField("Nombre:", nombreTextBox);
+    FlowPanel apellidoField = createFormField("Apellido:", apellidoTextBox);
+    FlowPanel emailField = createFormField("Email:", emailTextBox);
+    FlowPanel telefonoField = createFormField("Teléfono:", telefonoTextBox);
+    FlowPanel salarioField = createFormField("Salario:", salarioTextBox);
+
+    // Button panel
+    HorizontalPanel buttonPanel = new HorizontalPanel();
+    buttonPanel.addStyleName("buttonPanel");
+
+    // Style buttons
+    addButton.addStyleName("primaryButton");
+    updateButton.addStyleName("updateButton");
+    cancelButton.addStyleName("cancelButton");
+
+    buttonPanel.add(addButton);
+    buttonPanel.add(updateButton);
+    buttonPanel.add(cancelButton);
+
+    // Initially hide update button
+    updateButton.setVisible(false);
+    cancelButton.setVisible(false);
+
+    // Add form elements to panel
+    formPanel.add(nombreField);
+    formPanel.add(apellidoField);
+    formPanel.add(emailField);
+    formPanel.add(telefonoField);
+    formPanel.add(salarioField);
+    formPanel.add(buttonPanel);
+    formPanel.add(notificationLabel);
+
+    // Add elements to dialog
+    FlowPanel headerPanel = new FlowPanel();
+    headerPanel.addStyleName("dialogHeader");
+    headerPanel.add(dialogTitle);
+
+    dialogContents.add(headerPanel);
+    dialogContents.add(formPanel);
+    dialogContents.add(closeButton);
+    dialogContents.addStyleName("dialogContents");
+
+    dialogBox.setWidget(dialogContents);
+  }
+
+  private void showDialog(boolean isAddMode) {
+    if (isAddMode) {
+      addButton.setVisible(true);
+      updateButton.setVisible(false);
+      cancelButton.setVisible(false);
+    } else {
+      addButton.setVisible(false);
+      updateButton.setVisible(true);
+      cancelButton.setVisible(true);
+    }
+    dialogBox.center();
+    dialogBox.show();
   }
 
   private FlowPanel createFormField(String labelText, Widget widget) {
@@ -189,11 +283,13 @@ public class EmployeeManagement implements EntryPoint {
           employeeTable.setText(row, 5, empleado.getSalario().toString());
 
           // Action buttons
-          Button editButton = new Button("Editar");
-          Button deleteButton = new Button("Eliminar");
+          Button editButton = new Button("EDIT");
+          Button deleteButton = new Button("DELETE");
 
           editButton.addStyleName("actionButton");
+          editButton.addStyleName("editButton");
           deleteButton.addStyleName("actionButton");
+          deleteButton.addStyleName("deleteButton");
 
           HorizontalPanel actionPanel = new HorizontalPanel();
           actionPanel.add(editButton);
@@ -212,9 +308,8 @@ public class EmployeeManagement implements EntryPoint {
               telefonoTextBox.setText(empleado.getTelefono());
               salarioTextBox.setText(empleado.getSalario().toString());
 
-              addButton.setVisible(false);
-              updateButton.setVisible(true);
-              cancelButton.setVisible(true);
+              dialogTitle.setText("Editar Empleado");
+              showDialog(false);
             }
           });
 

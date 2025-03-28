@@ -3,7 +3,6 @@
 <module rename-to="employeemanagement">
   <!-- Inherit the core Web Toolkit stuff -->
   <inherits name="com.google.gwt.user.User" />
-  <inherits name="com.google.gwt.user.theme.clean.Clean" />
 
   <!-- Specify the app entry point class -->
   <entry-point class="com.example.client.EmployeeManagement" />
