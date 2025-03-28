@@ -1,18 +1,18 @@
 package com.example.client;
 
-import com.example.shared.Empleado;
+import java.util.List;
+
+import com.example.shared.Employee;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
-import java.util.List;
-
 @RemoteServiceRelativePath("employee")
 public interface EmployeeService extends RemoteService {
-  List<Empleado> getEmpleados();
+  List<Employee> getEmployees();
 
-  void addEmpleado(Empleado empleado);
+  void addEmployee(Employee employee);
 
-  void updateEmpleado(Empleado empleado);
+  void updateEmployee(Employee employee);
 
-  void deleteEmpleado(int id);
+  void deleteEmployee(int id);
 }

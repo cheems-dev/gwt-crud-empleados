@@ -1,24 +1,24 @@
 package com.example.server;
 
-import com.example.client.EmployeeService;
-import com.example.shared.Empleado;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-
 import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.example.client.EmployeeService;
+import com.example.shared.Employee;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+
 public class EmployeeServiceImpl extends RemoteServiceServlet implements EmployeeService {
   private static final long serialVersionUID = 1L;
   private static final Logger logger = Logger.getLogger(EmployeeServiceImpl.class.getName());
 
-  private final EmpleadoDAO empleadoDAO = new EmpleadoDAO();
+  private final EmployeeDAO employeeDAO = new EmployeeDAO();
 
   @Override
-  public List<Empleado> getEmpleados() {
+  public List<Employee> getEmployees() {
     try {
-      return empleadoDAO.getAllEmpleados();
+      return employeeDAO.getAllEmployees();
     } catch (SQLException e) {
       logger.log(Level.SEVERE, "Error retrieving employees", e);
       throw new RuntimeException("Error retrieving employees: " + e.getMessage());
@@ -26,9 +26,9 @@ public class EmployeeServiceImpl extends RemoteServiceServlet implements Employe
   }
 
   @Override
-  public void addEmpleado(Empleado empleado) {
+  public void addEmployee(Employee employee) {
     try {
-      empleadoDAO.addEmpleado(empleado);
+      employeeDAO.addEmployee(employee);
     } catch (SQLException e) {
       logger.log(Level.SEVERE, "Error adding employee", e);
       throw new RuntimeException("Error adding employee: " + e.getMessage());
@@ -36,9 +36,9 @@ public class EmployeeServiceImpl extends RemoteServiceServlet implements Employe
   }
 
   @Override
-  public void updateEmpleado(Empleado empleado) {
+  public void updateEmployee(Employee employee) {
     try {
-      empleadoDAO.updateEmpleado(empleado);
+      employeeDAO.updateEmployee(employee);
     } catch (SQLException e) {
       logger.log(Level.SEVERE, "Error updating employee", e);
       throw new RuntimeException("Error updating employee: " + e.getMessage());
@@ -46,9 +46,9 @@ public class EmployeeServiceImpl extends RemoteServiceServlet implements Employe
   }
 
   @Override
-  public void deleteEmpleado(int id) {
+  public void deleteEmployee(int id) {
     try {
-      empleadoDAO.deleteEmpleado(id);
+      employeeDAO.deleteEmployee(id);
     } catch (SQLException e) {
       logger.log(Level.SEVERE, "Error deleting employee", e);
       throw new RuntimeException("Error deleting employee: " + e.getMessage());

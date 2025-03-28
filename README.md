@@ -13,8 +13,8 @@ A web application for managing employees built with GWT, Java 8, and PostgreSQL.
 1. Clone this repository:
 
    ```
-   git clone https://github.com/yourusername/employee-management.git
-   cd employee-management
+   git clone https://github.com/cheems-dev/gwt-crud-empleados
+   cd gwt-crud-empleados
    ```
 
 2. Run the build script:
@@ -48,4 +48,8 @@ If you prefer to build and run the application manually:
 
 ## Stopping the Application
 
-To stop the application and remove the containers:
+To stop the application and remove the containers and volumes:
+
+```
+docker-compose down -v
+```

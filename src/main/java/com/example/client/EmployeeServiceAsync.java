@@ -1,16 +1,16 @@
 package com.example.client;
 
-import com.example.shared.Empleado;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-
 import java.util.List;
 
+import com.example.shared.Employee;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+
 public interface EmployeeServiceAsync {
-  void getEmpleados(AsyncCallback<List<Empleado>> callback);
+  void getEmployees(AsyncCallback<List<Employee>> callback);
 
-  void addEmpleado(Empleado empleado, AsyncCallback<Void> callback);
+  void addEmployee(Employee employee, AsyncCallback<Void> callback);
 
-  void updateEmpleado(Empleado empleado, AsyncCallback<Void> callback);
+  void updateEmployee(Employee employee, AsyncCallback<Void> callback);
 
-  void deleteEmpleado(int id, AsyncCallback<Void> callback);
+  void deleteEmployee(int id, AsyncCallback<Void> callback);
 }

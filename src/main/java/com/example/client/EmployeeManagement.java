@@ -2,7 +2,7 @@ package com.example.client;
 
 import java.util.List;
 
-import com.example.shared.Empleado;
+import com.example.shared.Employee;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -32,7 +32,7 @@ public class EmployeeManagement implements EntryPoint {
   private Button addButton = new Button("AGREGAR");
   private Button updateButton = new Button("ACTUALIZAR");
   private Button cancelButton = new Button("CANCELAR");
-  private Button showFormButton = new Button("ADD");
+  private Button showFormButton = new Button("NUEVO EMPLEADO");
   private Label notificationLabel = new Label();
 
   // Modal dialog
@@ -41,7 +41,7 @@ public class EmployeeManagement implements EntryPoint {
   private Label dialogTitle = new Label();
   private FlowPanel formPanel = new FlowPanel();
 
-  private Empleado currentEmployee = null;
+  private Employee currentEmployee = null;
 
   @Override
   public void onModuleLoad() {
@@ -82,14 +82,14 @@ public class EmployeeManagement implements EntryPoint {
       @Override
       public void onClick(ClickEvent event) {
         if (validateForm()) {
-          Empleado empleado = new Empleado();
-          empleado.setNombre(nombreTextBox.getText());
-          empleado.setApellido(apellidoTextBox.getText());
-          empleado.setEmail(emailTextBox.getText());
-          empleado.setTelefono(telefonoTextBox.getText());
-          empleado.setSalario(Double.parseDouble(salarioTextBox.getText()));
+          Employee employee = new Employee();
+          employee.setNombre(nombreTextBox.getText());
+          employee.setApellido(apellidoTextBox.getText());
+          employee.setEmail(emailTextBox.getText());
+          employee.setTelefono(telefonoTextBox.getText());
+          employee.setSalario(Double.parseDouble(salarioTextBox.getText()));
 
-          employeeService.addEmpleado(empleado, new AsyncCallback<Void>() {
+          employeeService.addEmployee(employee, new AsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable caught) {
               showNotification("Error al agregar empleado: " + caught.getMessage(), false);
@@ -118,7 +118,7 @@ public class EmployeeManagement implements EntryPoint {
           currentEmployee.setTelefono(telefonoTextBox.getText());
           currentEmployee.setSalario(Double.parseDouble(salarioTextBox.getText()));
 
-          employeeService.updateEmpleado(currentEmployee, new AsyncCallback<Void>() {
+          employeeService.updateEmployee(currentEmployee, new AsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable caught) {
               showNotification("Error al actualizar empleado: " + caught.getMessage(), false);
@@ -257,14 +257,14 @@ public class EmployeeManagement implements EntryPoint {
   }
 
   private void loadEmployees() {
-    employeeService.getEmpleados(new AsyncCallback<List<Empleado>>() {
+    employeeService.getEmployees(new AsyncCallback<List<Employee>>() {
       @Override
       public void onFailure(Throwable caught) {
         Window.alert("Error al cargar empleados: " + caught.getMessage());
       }
 
       @Override
-      public void onSuccess(List<Empleado> result) {
+      public void onSuccess(List<Employee> result) {
         // Clear table (except header row)
         while (employeeTable.getRowCount() > 1) {
           employeeTable.removeRow(1);
@@ -272,19 +272,19 @@ public class EmployeeManagement implements EntryPoint {
 
         // Add employees to table
         for (int i = 0; i < result.size(); i++) {
-          final Empleado empleado = result.get(i);
+          final Employee employee = result.get(i);
           int row = i + 1;
 
-          employeeTable.setText(row, 0, empleado.getId().toString());
-          employeeTable.setText(row, 1, empleado.getNombre());
-          employeeTable.setText(row, 2, empleado.getApellido());
-          employeeTable.setText(row, 3, empleado.getEmail());
-          employeeTable.setText(row, 4, empleado.getTelefono());
-          employeeTable.setText(row, 5, empleado.getSalario().toString());
+          employeeTable.setText(row, 0, employee.getId().toString());
+          employeeTable.setText(row, 1, employee.getNombre());
+          employeeTable.setText(row, 2, employee.getApellido());
+          employeeTable.setText(row, 3, employee.getEmail());
+          employeeTable.setText(row, 4, employee.getTelefono());
+          employeeTable.setText(row, 5, employee.getSalario().toString());
 
           // Action buttons
-          Button editButton = new Button("EDIT");
-          Button deleteButton = new Button("DELETE");
+          Button editButton = new Button("Editar");
+          Button deleteButton = new Button("Borrar");
 
           editButton.addStyleName("actionButton");
           editButton.addStyleName("editButton");
@@ -301,12 +301,12 @@ public class EmployeeManagement implements EntryPoint {
           editButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-              currentEmployee = empleado;
-              nombreTextBox.setText(empleado.getNombre());
-              apellidoTextBox.setText(empleado.getApellido());
-              emailTextBox.setText(empleado.getEmail());
-              telefonoTextBox.setText(empleado.getTelefono());
-              salarioTextBox.setText(empleado.getSalario().toString());
+              currentEmployee = employee;
+              nombreTextBox.setText(employee.getNombre());
+              apellidoTextBox.setText(employee.getApellido());
+              emailTextBox.setText(employee.getEmail());
+              telefonoTextBox.setText(employee.getTelefono());
+              salarioTextBox.setText(employee.getSalario().toString());
 
               dialogTitle.setText("Editar Empleado");
               showDialog(false);
@@ -318,7 +318,7 @@ public class EmployeeManagement implements EntryPoint {
             @Override
             public void onClick(ClickEvent event) {
               if (Window.confirm("¿Está seguro que desea eliminar este empleado?")) {
-                employeeService.deleteEmpleado(empleado.getId(), new AsyncCallback<Void>() {
+                employeeService.deleteEmployee(employee.getId(), new AsyncCallback<Void>() {
                   @Override
                   public void onFailure(Throwable caught) {
                     showNotification("Error al eliminar empleado: " + caught.getMessage(), false);

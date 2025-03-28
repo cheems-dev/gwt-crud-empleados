@@ -2,7 +2,7 @@ package com.example.shared;
 
 import java.io.Serializable;
 
-public class Empleado implements Serializable {
+public class Employee implements Serializable {
   private static final long serialVersionUID = 1L;
 
   private Integer id;
@@ -13,10 +13,10 @@ public class Empleado implements Serializable {
   private Double salario;
 
   // Default constructor required for GWT serialization
-  public Empleado() {
+  public Employee() {
   }
 
-  public Empleado(Integer id, String nombre, String apellido, String email, String telefono, Double salario) {
+  public Employee(Integer id, String nombre, String apellido, String email, String telefono, Double salario) {
     this.id = id;
     this.nombre = nombre;
     this.apellido = apellido;
