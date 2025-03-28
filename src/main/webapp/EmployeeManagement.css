@@ -1,0 +1,78 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+h1 {
+  color: #2c3e50;
+  text-align: center;
+}
+
+.employeeForm {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.employeeTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.employeeTable th,
+.employeeTable td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.employeeTable th {
+  background-color: #2c3e50;
+  color: white;
+}
+
+.employeeTable tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.actionButton {
+  margin-right: 5px;
+}
+
+.notification {
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+}
+
+.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.formField {
+  margin-bottom: 10px;
+}
+
+.formField label {
+  display: inline-block;
+  width: 100px;
+}
+
+.formField input {
+  padding: 5px;
+  width: 250px;
+}
+
+.buttonPanel {
+  margin-top: 10px;
+}
